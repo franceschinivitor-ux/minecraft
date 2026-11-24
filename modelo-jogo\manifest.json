@@ -1,16 +1,16 @@
 {
-  "slug": "meu-jogo",
-  "title": "Nome do meu jogo",
-  "author": "Seu nome",
-  "authorClass": "Sua turma",
+  "slug": "mineblocks",
+  "title": "MineBlocks",
+  "author": "Vitor Hugo",
+  "authorClass": "9º ano",
   "discipline": "Matemática",
-  "grades": ["6º", "7º"],
-  "tags": ["palavra-chave", "outra-palavra"],
-  "description": "Uma frase curta que explica o que o jogo ensina.",
-  "instructions": "Como jogar, em uma ou duas frases.",
-  "duration": 5,
+  "grades": ["9º ano"],
+  "tags": ["matemática", "área", "perímetro", "blocos", "geometria"],
+  "description": "Construa terrenos e cercados na grade de blocos para treinar área e perímetro na prática.",
+  "instructions": "Escolha o material, clique nos quadradinhos para colocar ou tirar blocos conforme o tamanho pedido e clique em Conferir Obra.",
+  "duration": "3 min",
   "version": "1.0.0",
   "entry": "index.html",
   "cover": "cover.svg",
-  "createdAt": "2026-11-02"
+  "createdAt": "2026-11-24"
 }

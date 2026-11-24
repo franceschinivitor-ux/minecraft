@@ -1,48 +1,124 @@
-<!doctype html>
-<html lang="pt-BR" data-theme="light">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="light dark" />
-    <title>Modelo de Jogo — Jogos VR</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="app">
-      <header class="top">
-        <div>
-          <span class="kicker">Modelo</span>
-          <h1 id="title">Clique no Alvo</h1>
-          <p class="subtitle">Troque este jogo pelo seu. O contrato já está pronto.</p>
-        </div>
-        <button id="restart" class="btn" type="button">Reiniciar</button>
-      </header>
-
-      <main>
-        <div class="hud">
-          <span class="pill">Alvos: <strong id="score">0</strong>/<span id="total">10</span></span>
-          <span class="pill">Tempo: <strong id="timer">0,0s</strong></span>
-        </div>
-
-        <div id="board" class="board" aria-label="Área do jogo">
-          <p id="start-hint" class="start-hint">Clique no alvo para começar</p>
-        </div>
-      </main>
-
-      <footer class="bottom">
-        <p>Este é o arquivo <code>game.js</code>. Leia os comentários e adapte.</p>
-      </footer>
-    </div>
-
-    <div id="result" class="overlay" hidden>
-      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="result-title">
-        <div class="modal-icon" aria-hidden="true">🎯</div>
-        <h2 id="result-title">Muito bem!</h2>
-        <p id="result-text">Você concluiu o jogo.</p>
-        <button id="play-again" class="btn btn-primary full" type="button">Jogar de novo</button>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MineBlocks - Área e Perímetro</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="container-jogo" id="app">
+    <!-- Cabeçalho com título e controle de tema -->
+    <header class="cabecalho">
+      <div class="logo-area">
+        <span class="icone-bloco" aria-hidden="true"></span>
+        <h1>MineBlocks</h1>
       </div>
-    </div>
+      <button type="button" id="btn-tema" class="btn-secundario btn-pequeno" aria-label="Alternar tema claro e escuro">
+        Tema
+      </button>
+    </header>
 
-    <script src="game.js"></script>
-  </body>
+    <!-- Tela Inicial -->
+    <section id="tela-inicio" class="painel tela-ativa">
+      <div class="banner-boas-vindas">
+        <h2>Bancada de Construção</h2>
+        <p>Construa terrenos e cercados na medida certa usando Matemática!</p>
+      </div>
+
+      <ul class="lista-regras">
+        <li><strong>10 rodadas:</strong> os desafios começam fáceis e ficam mais difíceis.</li>
+        <li><strong>Toque nos quadrados:</strong> clique ou toque na grade para colocar ou tirar blocos.</li>
+        <li><strong>3 corações:</strong> cada erro tira 1 coração e mostra uma dica rápida.</li>
+      </ul>
+
+      <button type="button" id="btn-iniciar" class="btn-principal">
+        Começar Construção
+      </button>
+    </section>
+
+    <!-- Tela Principal do Jogo -->
+    <section id="tela-jogo" class="painel oculto" aria-live="polite">
+      <!-- Barra de status: rodada, pontos e corações -->
+      <div class="barra-status">
+        <div class="status-item">
+          <span class="status-rotulo">Rodada</span>
+          <strong id="rodada-atual">1 / 10</strong>
+        </div>
+        <div class="status-item">
+          <span class="status-rotulo">Pontos</span>
+          <strong id="pontos-atuais">0</strong>
+        </div>
+        <div class="status-item">
+          <span class="status-rotulo">Vidas</span>
+          <strong id="vidas-container" aria-label="3 vidas restantes">❤️❤️❤️</strong>
+        </div>
+      </div>
+
+      <!-- Cartão com o pedido da construção -->
+      <div class="cartao-desafio">
+        <span id="etiqueta-tipo" class="etiqueta">Área</span>
+        <h2 id="titulo-desafio">Terreno Inicial</h2>
+        <p id="descricao-desafio">Carregando desafio...</p>
+      </div>
+
+      <!-- Escolha do tipo de bloco (visual de floresta e mineração) -->
+      <div class="seletor-materiais" role="group" aria-label="Escolha o tipo de bloco">
+        <button type="button" class="btn-material ativo" data-material="grama">
+          <span class="amostra grama"></span> Grama
+        </button>
+        <button type="button" class="btn-material" data-material="terra">
+          <span class="amostra terra"></span> Terra
+        </button>
+        <button type="button" class="btn-material" data-material="pedra">
+          <span class="amostra pedra"></span> Pedra
+        </button>
+        <button type="button" class="btn-material" data-material="madeira">
+          <span class="amostra madeira"></span> Madeira
+        </button>
+      </div>
+
+      <!-- Grade interativa onde o jogador coloca os blocos -->
+      <div class="area-grade">
+        <div id="grade-terreno" class="grade-terreno" role="grid" aria-label="Terreno de blocos 8 por 8"></div>
+        <p class="legenda-grade">Cada quadrado vale <strong>1 m × 1 m</strong> (1 m² de área).</p>
+      </div>
+
+      <!-- Resposta educativa após conferir -->
+      <div id="caixa-feedback" class="caixa-feedback oculto" role="status">
+        <p id="texto-feedback"></p>
+      </div>
+
+      <!-- Botões de ação -->
+      <div class="acoes-rodada">
+        <button type="button" id="btn-limpar" class="btn-secundario">
+          Limpar Grade
+        </button>
+        <button type="button" id="btn-conferir" class="btn-principal">
+          Conferir Obra
+        </button>
+        <button type="button" id="btn-proximo" class="btn-principal oculto">
+          Próxima Rodada
+        </button>
+      </div>
+    </section>
+
+    <!-- Tela Final -->
+    <section id="tela-fim" class="painel oculto">
+      <h2 id="titulo-final">Fim da Construção!</h2>
+      <p id="resumo-final">Veja como você se saiu nos desafios de área e perímetro.</p>
+
+      <div class="placar-final">
+        <span class="status-rotulo">Pontuação Final</span>
+        <strong id="pontuacao-final">0 / 100</strong>
+      </div>
+
+      <button type="button" id="btn-reiniciar" class="btn-principal">
+        Jogar Novamente
+      </button>
+    </section>
+  </main>
+
+  <script src="game.js"></script>
+</body>
 </html>
